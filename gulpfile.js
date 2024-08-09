@@ -39,7 +39,7 @@ function fonts() {
 
 
 function images() {
-    return src('app/images/src/*.*', '!app/images/src/*.svg')
+    return src(['app/images/src/*.*', '!app/images/src/*.svg'])
         .pipe(newer('app/images'))
         .pipe(avif({ quality: 50}))
 
@@ -56,7 +56,7 @@ function images() {
 
 
 function sprite () {
-    return src('app/images/')
+    return src('app/images/*.svg')
         .pipe(svgSprite({
             mode: {
                 stack: {
@@ -65,7 +65,7 @@ function sprite () {
                 }
             }
         }))
-        .pipe(dest('app/images/dist'))
+        .pipe(dest('app/images'))
 }
 
 
@@ -110,13 +110,13 @@ function cleanDist() {
 function building() {
     return src([
         'app/css/style.min.css',
-        'app/images/dist/*.*',
-        '!app/images/dist/*.svg',
-        'app/images/dist/sprite.svg',
-        '!app/images/dist/stack',
+        'app/images/*.*',
+        '!app/images/*.svg',
+        'app/images/sprite.svg',
         'app/fonts/*.*',
         'app/js/main.min.js',
-        'app/**/*.html'
+        'app/**/*.html',
+        '!app/images/**/*.html',
     ], {base : 'app'})
         .pipe(dest('dist'))
 }
@@ -125,9 +125,9 @@ exports.styles = styles;
 exports.images = images;
 exports.fonts = fonts;
 exports.pages = pages;
-exports.building = building;
 exports.sprite = sprite;
 exports.scripts = scripts;
+exports.building = building;
 exports.watching = watching;
 
 exports.build = series(cleanDist, building);
